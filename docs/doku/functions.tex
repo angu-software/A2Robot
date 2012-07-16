@@ -1,0 +1,32 @@
+%Funktionen für Latex-Dokumente
+
+\usepackage{ifthen}
+
+%figure with citation
+%\fig[width]{file}{label}{caption}{cite}
+\newcommand{\fig}[5][1]{
+\begin{figure}[!htbp]
+\begin{center}
+\includegraphics[width=#1\linewidth]{#2}
+\caption[#4]{#4\ifthenelse{\equal{#5}{}}{}{~\cite{#5}}}
+\label{#3}
+\end{center}
+\end{figure}
+}
+
+%Trademark Copyright
+\newcommand{\tcopy}[0]{
+\textsuperscript{\textcopyright}
+}
+
+\newcommand{\figref}[1]{
+Abbildung~\ref{#1}
+}
+
+\newcommand{\secref}[1]{
+Abschnitt~\ref{#1}
+}
+
+\newcommand{\enlargepage}[0]{
+\enlargethispage{\baselineskip}
+}

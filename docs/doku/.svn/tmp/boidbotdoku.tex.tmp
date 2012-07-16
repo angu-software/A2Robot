@@ -1,0 +1,106 @@
+%---Preamble---
+\documentclass[12pt,a4paper,titlepage]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[ngerman]{babel}
+\usepackage{longtable}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{float}
+\usepackage{xcolor}
+\definecolor{black}{gray}{0} % 10% gray 
+\usepackage[colorlinks=true,linkcolor=black,citecolor=black]{hyperref}
+\usepackage[normalem]{ulem}
+\usepackage{listings}
+\usepackage{hyperref}
+
+\parindent 0pt
+\parskip 8pt
+
+%---Funktionen--
+\include{functions}
+
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Titelseite
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{titlepage}
+\begin{center}
+
+{\Large Autonome Systeme\\[0.1cm]
+Hochschule für Technik und Wirtschaft\\[0.1cm]
+SS2011}\\[1.5cm]
+\rule{\linewidth}{0.3mm}\\[1.5cm]
+{\Huge BoidBot $A_{2}R$}\\[1cm]
+{\Large --- Dokumentation ---}\\[1.5cm]
+\rule{\linewidth}{0.3mm}\\[1.5cm]
+{\large \today}\\[1cm]
+\textbf{Andreas Bilke B.Sc.}\\(andreas.bilke@student.htw-berlin.de)\\[0.3cm]
+\textbf{Andreas Günther B.Sc.}\\(andreas.guenther@student.htw-berlin.de)\\[3cm]
+\end{center}
+\end{titlepage}
+\newpage
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Inhaltsverzeichnis
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pagenumbering{roman}
+\tableofcontents
+\newpage
+\pagenumbering{arabic}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Inhalt
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\section{Aufgabenstellung}
+\section{Hardware}
+\section{Controller}
+
+In diesem Abschnitt wird die entwickelte Software für die Roboter beschrieben. Die Grundplattform ist Arduino, daher wurde zur Erstellung der Software die Arduino Entwicklungsumgebung genutzt. Als Programmiersprache wird ein C-Dialekt verwendet.
+
+\subsection{Verwendete Softwarekomponenten}
+
+Die Arduino Plattform besitzt eine große Gemeinschaft, welche für viele Bauteile spezielle Bibliotheken zur Verfügung stellt. Diese erleichtern das Entwickeln von eigenen Projekten stark.
+
+Es wurden Bibliothken für die Ansteuerung von Servos\footnote{http://www.arduino.cc/playground/ComponentLib/Servo}, einem Stepper-Motor\footnote{http://arduino.cc/en/Reference/Stepper} und zur Steuerung der Infrarot LEDs\footnote{https://github.com/shirriff/Arduino-IRremote} genutzt.
+
+\subsection{Grundverhalten}
+
+Um den Schwenkkopf, an dem der Distanzsensor und der Infrarotempfänger installiert ist, zu steuern wurde ein Schrittmotor genutzt. Dieser kann eine vollständige Umdrehung in 200 Schritten absolvieren. Das bedeutet, das ein Schritt dieses Motors den Schwenkkopf um 1{,}8$^\circ$ dreht.
+
+Im Grundverhalten wird dieser Kopf im Halbkreis um den Roboter bewegt, damit er den kompletten Bereich vor sich abtasten kann. In jedem Schritt wird die aktuell ermittelt Wert des Distanzmessers gelesen und verarbeitet.
+
+Der Distanzsensor hat eine Reichweite von 10 bis 80 cm. Versorgt wird der Sensor über einen 5 V Anschluss. Je nach ermittelter Entfernung kann am Sensorausgang eine entsprechende Spannung abgelesen werden. Das Ablesen erfolgt mittels analogem Eingang am Arduino, welches die Eingangsspannung auf einen Wert zwischen 0 und 1024 abbildet.
+
+Damit der jeweilige Roboter vom anderen erkannt werden kann, wird ein Infrarot Signal permanent ausgesendet. Dazu wird die IRremote Bibliothek genutzt, die es erlaubt beliebige Daten über Infrarot zu verschicken. Erkannt werden diese Lichtsignale über einen Infrarotempfänger. Dieser besitzt neben der Stromversorgung auch einen Signalausgang. Wird kein IR Signal empfangen, liegt an diesem 5 V an. Wird ein IR Signal erkannt, fällt die Spannung kurzfristig auf 0 V. Um diese Veränderung zu erkennen, wurde der Empfänger an einen Interrupt fähigen Pin des Arduinos angeschlossen. Kommt es zum Spannungsabfall an diesem Pin wird eine Funktion der Mikocontrollers aufgerufen. Dieser speichert zur weiteren Verarbeitung den aktuellen Winkel des Schwenkkopfes.
+
+\subsection{Verhaltensbasierter Roboter}
+
+Der Algorithmus basiert auf der Verwendung von verschiedenen Verhalten. Diese sind auf dem Roboter mittels einer Statusmaschine implementiert. Das Standardverhalten eines jeden Roboters ist es, gerade aus zu fahren. Falls ein Hindernis mittels des Schwenkarms entdeckt wurde, wird in den Status Objekt ausweichen gewechselt. Konnte mittels Infrarot Empfänger ein anderer Roboter erkannt werden, wird das Verhalten Roboter folgen genutzt.
+
+\subsection{Algorithmus}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Literaturverzeichnis
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\newpage
+%\nocite{*}
+%\bibliography{books}
+%\bibliographystyle{alphadin}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Anhang
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%\newpage
+%\addcontentsline{toc}{section}{Anhang}
+
+%\begin{appendix}
+
+%\end{appendix}
+
+\end{document}
